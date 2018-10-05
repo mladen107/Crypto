@@ -56,7 +56,9 @@ module.exports = {
     },
 
     plugins: [
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            template: "src/index.html"
+        }),
         new SassLintPlugin({
             configPath: path.join(__dirname, "..", "/.sass-lint.yml"),
             files: "src/**/*.scss"

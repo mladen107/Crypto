@@ -11,9 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "normalize.css": "^8.0.0",
+    "@material-ui/core": "^3.1.2",
+    "@material-ui/icons": "^3.0.1",
+    "mobx": "^5.5.0",
+    "mobx-react": "^5.2.8",
+    "mobx-react-router": "^4.0.5",
+    "npm": "^6.4.1",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "react-router": "^4.3.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
