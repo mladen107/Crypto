@@ -6,6 +6,7 @@ module.exports = merge(baseConfig, {
     devServer: {
         compress: true,
         port: 9000,
+        historyApiFallback: true,
         stats: {
             all: false,
             wds: true,

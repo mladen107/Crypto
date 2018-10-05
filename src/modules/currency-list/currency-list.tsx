@@ -6,21 +6,33 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import FilterListIcon from "@material-ui/icons/Refresh";
 import {ICurrenciesStore} from "interfaces/stores/currencies-store";
 import {inject, observer} from "mobx-react";
+import { RouterStore } from "mobx-react-router";
 import * as React from "react";
+
+interface ICurrencyListProps {
+    currenciesStore?: ICurrenciesStore;
+    routerStore?: RouterStore;
+}
 
 @inject((allStores: any) => ({
     currenciesStore: allStores.currenciesStore as ICurrenciesStore,
+    routerStore: allStores.routerStore as RouterStore,
 }))
 @observer
-export class CurrencyList extends React.Component<{ currenciesStore?: ICurrenciesStore }> {
+export class CurrencyList extends React.Component<ICurrencyListProps> {
     public render() {
-        const {data} = this.props.currenciesStore!;
+        const {data} = this.props.currenciesStore;
 
         return <Paper>
             <Toolbar>
+                <Typography variant="title">
+                    Currency List
+                </Typography>
+                <div></div>
                 <IconButton aria-label="Filter list" onClick={this.handleRefresh}>
                     <FilterListIcon/>
                 </IconButton>
@@ -39,7 +51,9 @@ export class CurrencyList extends React.Component<{ currenciesStore?: ICurrencie
                         .sort((a, b) => (a.rank - b.rank))
                         .map((row) => {
                             return (
-                                <TableRow key={row.id}>
+                                <TableRow key={row.id} hover onClick={() => {
+                                    this.handleRowClick(row.id);
+                                }}>
                                     <TableCell numeric component="th" scope="row">
                                         {row.rank}
                                     </TableCell>
@@ -54,7 +68,11 @@ export class CurrencyList extends React.Component<{ currenciesStore?: ICurrencie
         </Paper>;
     }
 
+    private handleRowClick = (currencyId: number) => {
+        this.props.routerStore.push(`/${currencyId}`);
+    }
+
     private handleRefresh = () => {
-        this.props.currenciesStore!.loadData();
+        this.props.currenciesStore.loadData();
     }
 }
