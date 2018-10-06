@@ -1,14 +1,23 @@
 import Paper from "@material-ui/core/Paper";
 import {IPageToolbarProps, PageToolbar} from "components/page-toolbar";
 import * as React from "react";
+import {PageBackButton} from "./page-back-button";
 
-export class Page extends React.Component<IPageToolbarProps> {
+interface IPageProps extends IPageToolbarProps {
+    hasBackButton?: boolean;
+}
+
+export class Page extends React.Component<IPageProps> {
     public render() {
-        const {children, title, onRefreshClick} = this.props;
+        const {hasRefresh, children, title, onRefreshClick, hasBackButton} = this.props;
+        const toolbarProps = {hasRefresh, title, onRefreshClick};
 
-        return <Paper>
-            <PageToolbar title={title} onRefreshClick={onRefreshClick}/>
-            {children}
-        </Paper>;
+        return <React.Fragment>
+            {hasBackButton && <PageBackButton/>}
+            <Paper>
+                <PageToolbar {...toolbarProps}/>
+                {children}
+            </Paper>
+        </React.Fragment>;
     }
 }

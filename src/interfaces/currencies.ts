@@ -1,4 +1,4 @@
-import {CurrencyEnum} from "enums/currencyEnum";
+import {FiatCurrencyEnum} from "enums/fiat-currency-enum";
 
 export interface IQuote {
     price: number;
@@ -6,7 +6,7 @@ export interface IQuote {
 }
 
 export type TQuotes = {
-    [P in CurrencyEnum]?: IQuote;
+    [P in FiatCurrencyEnum]?: IQuote;
 };
 
 export interface ICurrency {

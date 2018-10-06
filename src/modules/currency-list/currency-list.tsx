@@ -24,7 +24,7 @@ const TableCell = (props: TableCellProps) => (<MDTableCell padding="dense" {...p
 @observer
 export class CurrencyList extends React.Component<ICurrencyListProps> {
     public render() {
-        const {data} = this.props.currenciesStore;
+        const {currenciesStore: {data, fiatCurrency}} = this.props;
 
         return <Page title={"Currency List"} onRefreshClick={this.handleRefresh}>
             <Table>
@@ -48,8 +48,8 @@ export class CurrencyList extends React.Component<ICurrencyListProps> {
                                         {row.rank}
                                     </TableCell>
                                     <TableCell >{row.symbol}</TableCell>
-                                    <TableCell numeric>{row.quotes.USD.price} USD</TableCell>
-                                    <TableCell numeric>{row.quotes.USD.percent_change_24h}%</TableCell>
+                                    <TableCell numeric>{row.quotes[fiatCurrency].price} {fiatCurrency}</TableCell>
+                                    <TableCell numeric>{row.quotes[fiatCurrency].percent_change_24h}%</TableCell>
                                 </TableRow>
                             );
                         })}
@@ -58,8 +58,12 @@ export class CurrencyList extends React.Component<ICurrencyListProps> {
         </Page>;
     }
 
+    public componentDidMount() {
+       this.props.currenciesStore.loadIfNeeded();
+    }
+
     private handleRowClick = (currencyId: number) => {
-        this.props.routerStore.push(`/${currencyId}`);
+        this.props.routerStore.push(`/detail/${currencyId}`);
     }
 
     private handleRefresh = () => {

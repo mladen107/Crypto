@@ -5,18 +5,21 @@ import {Provider} from "mobx-react";
 import {RouterStore, syncHistoryWithStore} from "mobx-react-router";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Router } from "react-router";
+import {Router} from "react-router";
+import {CurrenciesStore} from "stores/currencies-store";
+import {SettingsStore} from "stores/settings-store";
 import {App} from "./app";
 import "./index.scss";
-import {CurrenciesStore} from "./stores/currencies-store";
 
 configure({
     enforceActions: "observed",
 });
 
 const api = new Api();
-const currenciesStore = new CurrenciesStore(api);
-currenciesStore.loadData();
+
+const settingsStore = new SettingsStore();
+
+const currenciesStore = new CurrenciesStore(api, settingsStore);
 
 const browserHistory = createBrowserHistory();
 const routerStore = new RouterStore();
@@ -25,6 +28,7 @@ const history = syncHistoryWithStore(browserHistory, routerStore);
 const stores = {
     currenciesStore,
     routerStore,
+    settingsStore,
 };
 
 const rootNode = document.createElement("div");
