@@ -5,6 +5,7 @@ const SassLintPlugin = require("sass-lint-webpack");
 module.exports = {
     entry: "./src/index.tsx",
     output: {
+        publicPath: "/",
         filename: "[name].[contenthash].js",
         path: path.join(__dirname, "..", "dist")
     },

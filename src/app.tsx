@@ -4,6 +4,7 @@ import {CurrencyList} from "modules/currency-list";
 import {Settings} from "modules/settings";
 import * as React from "react";
 import {Route, RouteComponentProps} from "react-router";
+import {CurrencyDetail} from "./modules/currency-detail";
 
 export class App extends React.Component {
     public render() {
@@ -14,7 +15,7 @@ export class App extends React.Component {
                 <Route path="/detail/:currencyId"
                        component={
                            (props: RouteComponentProps<{ currencyId: string }>) =>
-                               (<div>Work in progress ... {props.match.params.currencyId}</div>)}/>
+                               (<CurrencyDetail id={props.match.params.currencyId}/>)}/>
             </AppLayout>
         </CssBaseline>;
     }

@@ -1,27 +1,29 @@
+import {AxiosResponse} from "axios";
 import {IApi} from "interfaces/api";
-import {ICurrency} from "interfaces/currencies";
+import {ICurrency, ICurrencyTickerItemResponse} from "interfaces/currencies";
+import {ISettingsStore} from "interfaces/stores/settings-store";
 import {action, observable, runInAction, when} from "mobx";
-import {Simulate} from "react-dom/test-utils";
 import {FiatCurrencyEnum} from "../enums/fiat-currency-enum";
-import {ICurrenciesStore} from "../interfaces/stores/currencies-store";
-import {ISettingsStore} from "../interfaces/stores/settings-store";
-import loadedData = Simulate.loadedData;
+import {ICurrencyDetailStore} from "../interfaces/stores/currency-detail";
 
-export class CurrenciesStore implements ICurrenciesStore {
+export class CurrencyDetailStore implements ICurrencyDetailStore {
 
     @observable
     public isLoading = false;
 
+    @observable.ref
+    public data: ICurrency;
+
     @observable
     public fiatCurrency: FiatCurrencyEnum;
 
-    public data = observable.map<string, ICurrency>();
-
+    private id: number;
     private api: IApi;
     private settingsStore: ISettingsStore;
     private lastlyUsedFiatCurrency?: FiatCurrencyEnum;
 
-    constructor(api: IApi, settingsStore: ISettingsStore) {
+    constructor(id: number, api: IApi, settingsStore: ISettingsStore) {
+        this.id = id;
         this.api = api;
         this.settingsStore = settingsStore;
     }
@@ -49,9 +51,14 @@ export class CurrenciesStore implements ICurrenciesStore {
         this.isLoading = true;
         this.lastlyUsedFiatCurrency = settingsFiatCurrency;
 
-        this.api.getTopCurrencies(settingsFiatCurrency).then(({data}) => {
+        Promise.all<AxiosResponse<ICurrencyTickerItemResponse>>([
+            this.api.getCurrency(this.id, settingsFiatCurrency),
+            this.api.getCurrency(this.id, "BTC"),
+        ]).then((responses) => {
             runInAction(() => {
-                this.data.replace(data.data);
+                this.data = responses[0].data.data;
+                this.data.quotes.BTC = responses[1].data.data.quotes.BTC;
+
                 this.isLoading = false;
                 this.fiatCurrency = settingsFiatCurrency;
             });
