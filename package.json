@@ -16,6 +16,7 @@
     "mobx": "^5.5.0",
     "mobx-react": "^5.2.8",
     "mobx-react-router": "^4.0.5",
+    "normalize.css": "^8.0.0",
     "npm": "^6.4.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",

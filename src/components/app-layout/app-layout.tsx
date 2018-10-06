@@ -1,12 +1,14 @@
-import {Toolbar} from "components/toolbar";
+import {AppToolbar} from "components/app-toolbar";
 import * as React from "react";
-import {root} from "./app-layout.scss";
+import {content, root} from "./app-layout.scss";
 
 export class AppLayout extends React.Component {
     public render() {
         return <div className={root}>
-            <Toolbar/>
+            <AppToolbar/>
+            <div className={content}>
             {this.props.children}
+            </div>
         </div>;
     }
 }

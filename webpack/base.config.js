@@ -60,7 +60,7 @@ module.exports = {
             template: "src/index.html"
         }),
         new SassLintPlugin({
-            configPath: path.join(__dirname, "..", "/.sass-lint.yml"),
+            configPath: path.join(__dirname, "..", ".sasslintrc"),
             files: "src/**/*.scss"
         })
     ]
