@@ -1,10 +1,8 @@
-import {AxiosResponse} from "axios";
-import {IApi} from "interfaces/api";
+import {FiatCurrencyEnum} from "enums/fiat-currency-enum";
 import {ICurrency, ICurrencyTickerItemResponse} from "interfaces/currencies";
+import {ICurrencyDetailStore, ICurrencyDetailStoreApi} from "interfaces/stores/currency-detail-store";
 import {ISettingsStore} from "interfaces/stores/settings-store";
 import {action, observable, runInAction, when} from "mobx";
-import {FiatCurrencyEnum} from "../enums/fiat-currency-enum";
-import {ICurrencyDetailStore} from "../interfaces/stores/currency-detail";
 
 export class CurrencyDetailStore implements ICurrencyDetailStore {
 
@@ -18,11 +16,11 @@ export class CurrencyDetailStore implements ICurrencyDetailStore {
     public fiatCurrency: FiatCurrencyEnum;
 
     private id: number;
-    private api: IApi;
+    private api: ICurrencyDetailStoreApi;
     private settingsStore: ISettingsStore;
     private lastlyUsedFiatCurrency?: FiatCurrencyEnum;
 
-    constructor(id: number, api: IApi, settingsStore: ISettingsStore) {
+    constructor(id: number, api: ICurrencyDetailStoreApi, settingsStore: ISettingsStore) {
         this.id = id;
         this.api = api;
         this.settingsStore = settingsStore;
@@ -51,13 +49,13 @@ export class CurrencyDetailStore implements ICurrencyDetailStore {
         this.isLoading = true;
         this.lastlyUsedFiatCurrency = settingsFiatCurrency;
 
-        Promise.all<AxiosResponse<ICurrencyTickerItemResponse>>([
+        Promise.all<ICurrencyTickerItemResponse>([
             this.api.getCurrency(this.id, settingsFiatCurrency),
             this.api.getCurrency(this.id, "BTC"),
         ]).then((responses) => {
             runInAction(() => {
-                this.data = responses[0].data.data;
-                this.data.quotes.BTC = responses[1].data.data.quotes.BTC;
+                this.data = responses[0].data;
+                this.data.quotes.BTC = responses[1].data.quotes.BTC;
 
                 this.isLoading = false;
                 this.fiatCurrency = settingsFiatCurrency;

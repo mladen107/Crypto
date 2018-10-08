@@ -1,11 +1,8 @@
-import {IApi} from "interfaces/api";
+import {FiatCurrencyEnum} from "enums/fiat-currency-enum";
 import {ICurrency} from "interfaces/currencies";
+import {ICurrenciesStore, ICurrenciesStoreApi} from "interfaces/stores/currencies-store";
+import {ISettingsStore} from "interfaces/stores/settings-store";
 import {action, observable, runInAction, when} from "mobx";
-import {Simulate} from "react-dom/test-utils";
-import {FiatCurrencyEnum} from "../enums/fiat-currency-enum";
-import {ICurrenciesStore} from "../interfaces/stores/currencies-store";
-import {ISettingsStore} from "../interfaces/stores/settings-store";
-import loadedData = Simulate.loadedData;
 
 export class CurrenciesStore implements ICurrenciesStore {
 
@@ -15,13 +12,13 @@ export class CurrenciesStore implements ICurrenciesStore {
     @observable
     public fiatCurrency: FiatCurrencyEnum;
 
-    public data = observable.map<string, ICurrency>();
+    public data = observable.map<string, ICurrency>({}, {deep: false});
 
-    private api: IApi;
+    private api: ICurrenciesStoreApi;
     private settingsStore: ISettingsStore;
     private lastlyUsedFiatCurrency?: FiatCurrencyEnum;
 
-    constructor(api: IApi, settingsStore: ISettingsStore) {
+    constructor(api: ICurrenciesStoreApi, settingsStore: ISettingsStore) {
         this.api = api;
         this.settingsStore = settingsStore;
     }
@@ -51,7 +48,7 @@ export class CurrenciesStore implements ICurrenciesStore {
 
         this.api.getTopCurrencies(settingsFiatCurrency).then(({data}) => {
             runInAction(() => {
-                this.data.replace(data.data);
+                this.data.replace(data);
                 this.isLoading = false;
                 this.fiatCurrency = settingsFiatCurrency;
             });
